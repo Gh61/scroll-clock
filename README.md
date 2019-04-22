@@ -1,2 +1,2 @@
-# scroll-clock
+# Scroll clock
 HTML clock made of scrollbars

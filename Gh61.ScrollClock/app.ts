@@ -3,7 +3,7 @@
 	timerToken: number;
 
 	constructor(element: HTMLElement) {
-		this.clock = new Clock(element);
+		this.clock = new Clock(element, true);
 	}
 
 	start() {
@@ -15,7 +15,6 @@
 	stop() {
 		clearTimeout(this.timerToken);
 	}
-
 }
 
 window.onload = () => {

@@ -2,16 +2,17 @@
 @cornerWidth: 20px;
 @cornerHeight: 20px;
 @scrollbarHeight: 17px;
+@animation: .4s;
 
 body {
 	text-align:center;
 }
 
-.horizontal-line div{
-	transition:width .5s;
+.horizontal-line div {
+	transition: width @animation;
 }
-.vertical-line div{
-	transition: height .5s;
+.vertical-line div {
+	transition: height @animation;
 }
 
 .display {

@@ -1,28 +1,29 @@
 ﻿class Greeter {
-    element: HTMLElement;
-    span: HTMLElement;
-    timerToken: number;
+	private readonly line: ISegment;
+	timerToken: number;
 
-    constructor(element: HTMLElement) {
-        this.element = element;
-        this.element.innerHTML += "The time is: ";
-        this.span = document.createElement('span');
-        this.element.appendChild(this.span);
-        this.span.innerText = new Date().toUTCString();
-    }
+	constructor(element: HTMLElement) {
+		this.line = new HLine(element, 200);
+	}
 
-    start() {
-        this.timerToken = setInterval(() => this.span.innerHTML = new Date().toUTCString(), 500);
-    }
+	start() {
+		this.timerToken = setInterval(() => {
+			if (this.line.isActive) {
+				this.line.setInactive();
+			} else {
+				this.line.setActive();
+			}
+		}, 1000);
+	}
 
-    stop() {
-        clearTimeout(this.timerToken);
-    }
+	stop() {
+		clearTimeout(this.timerToken);
+	}
 
 }
 
 window.onload = () => {
-    var el = document.getElementById('content');
-    var greeter = new Greeter(el);
-    greeter.start();
+	var el = document.getElementById("content");
+	var greeter = new Greeter(el);
+	greeter.start();
 };

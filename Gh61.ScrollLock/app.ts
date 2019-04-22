@@ -1,15 +1,15 @@
 ﻿class Greeter {
-	private readonly display1: SevenSegment;
+	private readonly display1: IDisplay;
 	timerToken: number;
 
 	constructor(element: HTMLElement) {
-		this.display1 = new SevenSegment(element);
+		this.display1 = new DoubleDisplay(element, true);
 
 	}
 
 	start() {
 		this.timerToken = setInterval(() => {
-			var s = new Date().getSeconds() % 10;
+			var s = new Date().getSeconds();
 			this.display1.setNumber(s);
 		}, 1000);
 	}

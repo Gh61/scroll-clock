@@ -21,12 +21,12 @@ var HLine = /** @class */ (function () {
 }());
 var Greeter = /** @class */ (function () {
     function Greeter(element) {
-        this.display1 = new SevenSegment(element);
+        this.display1 = new DoubleDisplay(element, true);
     }
     Greeter.prototype.start = function () {
         var _this = this;
         this.timerToken = setInterval(function () {
-            var s = new Date().getSeconds() % 10;
+            var s = new Date().getSeconds();
             _this.display1.setNumber(s);
         }, 1000);
     };
@@ -68,29 +68,22 @@ var SevenSegment = /** @class */ (function () {
         this.segments = new Array(7);
         this.width = width;
         this.height = height;
-        var display = document.createElement("div");
-        display.className = "display";
-        display.style.width = (width + 2 * Dimensions.cornerWidth) + "px";
-        display.style.height = (height + 3 * Dimensions.cornerHeight) + "px";
-        container.appendChild(display);
-        this.segments[0] = this.createHorizontal(display, "a");
-        this.segments[1] = this.createVertical(display, "b");
-        this.segments[2] = this.createVertical(display, "c");
-        this.segments[3] = this.createHorizontal(display, "d");
-        this.segments[4] = this.createVertical(display, "e");
-        this.segments[5] = this.createVertical(display, "f");
-        this.segments[6] = this.createHorizontal(display, "g");
+        this.element = document.createElement("div");
+        this.element.className = "display";
+        this.element.style.width = (width + 2 * Dimensions.cornerWidth) + "px";
+        this.element.style.height = (height + 3 * Dimensions.cornerHeight) + "px";
+        container.appendChild(this.element);
+        this.segments[0] = this.createHorizontal(this.element, "a");
+        this.segments[1] = this.createVertical(this.element, "b");
+        this.segments[2] = this.createVertical(this.element, "c");
+        this.segments[3] = this.createHorizontal(this.element, "d");
+        this.segments[4] = this.createVertical(this.element, "e");
+        this.segments[5] = this.createVertical(this.element, "f");
+        this.segments[6] = this.createHorizontal(this.element, "g");
         this.deactivate();
     }
     SevenSegment.prototype.get = function (c) {
         return this.segments[(c.charCodeAt(0) - 97)];
-    };
-    SevenSegment.prototype.createFiller = function (parent) {
-        var filler = document.createElement("div");
-        filler.className = "filler";
-        filler.style.width = this.width + "px";
-        filler.style.height = (this.height / 2) + "px";
-        parent.appendChild(filler);
     };
     SevenSegment.prototype.createHorizontal = function (parent, identifier) {
         var container = document.createElement("div");
@@ -228,5 +221,40 @@ var Dimensions = /** @class */ (function () {
     Dimensions.cornerWidth = 20;
     Dimensions.cornerHeight = 20;
     return Dimensions;
+}());
+var DoubleDisplay = /** @class */ (function () {
+    function DoubleDisplay(container, padWithZero, segmentWidth, segmentHeight) {
+        if (segmentWidth === void 0) { segmentWidth = 100; }
+        if (segmentHeight === void 0) { segmentHeight = 200; }
+        this.element = document.createElement("div");
+        this.element.className = "double-display";
+        container.appendChild(this.element);
+        this.padWithZero = padWithZero;
+        this.display0 = new SevenSegment(this.element, segmentWidth, segmentHeight);
+        this.display1 = new SevenSegment(this.element, segmentWidth, segmentHeight);
+        // inline with space
+        this.display0.element.style.display = "inline-block";
+        this.display0.element.style.marginRight = "5px";
+        this.display1.element.style.display = "inline-block";
+    }
+    DoubleDisplay.prototype.deactivate = function () {
+        this.display0.deactivate();
+        this.display1.deactivate();
+    };
+    DoubleDisplay.prototype.setNumber = function (value) {
+        if (value < 0 || value > 99) {
+            throw "Value " + value + " is out of supported range (0-9).";
+        }
+        var d1 = value % 10;
+        var d0 = Math.floor(value / 10);
+        if (d0 === 0 && !this.padWithZero) {
+            this.display0.deactivate();
+        }
+        else {
+            this.display0.setNumber(d0);
+        }
+        this.display1.setNumber(d1);
+    };
+    return DoubleDisplay;
 }());
 //# sourceMappingURL=app.js.map

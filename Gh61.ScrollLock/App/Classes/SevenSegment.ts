@@ -1,40 +1,34 @@
-﻿class SevenSegment {
+﻿class SevenSegment implements IDisplay {
 	private readonly segments: ISegment[];
 	private readonly height: number;
 	private readonly width: number;
+
+	element: HTMLElement;
 
 	constructor(container: HTMLElement, width:number = 100, height:number = 200) {
 		this.segments = new Array(7);
 		this.width = width;
 		this.height = height;
 
-		var display = document.createElement("div");
-		display.className = "display";
-		display.style.width = (width + 2*Dimensions.cornerWidth) + "px";
-		display.style.height = (height + 3*Dimensions.cornerHeight) + "px";
-		container.appendChild(display);
+		this.element = document.createElement("div");
+		this.element.className = "display";
+		this.element.style.width = (width + 2*Dimensions.cornerWidth) + "px";
+		this.element.style.height = (height + 3*Dimensions.cornerHeight) + "px";
+		container.appendChild(this.element);
 
-		this.segments[0] = this.createHorizontal(display, "a");
-		this.segments[1] = this.createVertical(display, "b");
-		this.segments[2] = this.createVertical(display, "c");
-		this.segments[3] = this.createHorizontal(display, "d");
-		this.segments[4] = this.createVertical(display, "e");
-		this.segments[5] = this.createVertical(display, "f");
-		this.segments[6] = this.createHorizontal(display, "g");
+		this.segments[0] = this.createHorizontal(this.element, "a");
+		this.segments[1] = this.createVertical(this.element, "b");
+		this.segments[2] = this.createVertical(this.element, "c");
+		this.segments[3] = this.createHorizontal(this.element, "d");
+		this.segments[4] = this.createVertical(this.element, "e");
+		this.segments[5] = this.createVertical(this.element, "f");
+		this.segments[6] = this.createHorizontal(this.element, "g");
 
 		this.deactivate();
 	}
 
 	private get(c: string): ISegment {
 		return this.segments[(c.charCodeAt(0) - 97)];
-	}
-
-	private createFiller(parent: HTMLElement): void {
-		var filler = document.createElement("div");
-		filler.className = "filler";
-		filler.style.width = this.width + "px";
-		filler.style.height = (this.height / 2) + "px";
-		parent.appendChild(filler);
 	}
 
 	private createHorizontal(parent: HTMLElement, identifier:string):ISegment {
@@ -61,7 +55,7 @@
 		});
 	}
 
-	setNumber(value: number) {
+	setNumber(value: number): void {
 		if (value < 0 || value > 9) {
 			throw `Value ${value} is out of supported range (0-9).`;
 		}

@@ -1,1 +1,1 @@
-﻿
+﻿.horizontal-line div{transition:width .5s;}.vertical-line div{transition:height .5s;}.display{position:relative;}.display .line{position:absolute;}.display .segment-a{top:0;left:20px;}.display .segment-b{right:0;top:20px;}.display .segment-c{right:0;bottom:20px;}.display .segment-d{bottom:0;right:20px;}.display .segment-e{left:0;bottom:20px;}.display .segment-f{left:0;top:20px;}.display .segment-g{left:20px;top:calc(50% - 17px/2);}

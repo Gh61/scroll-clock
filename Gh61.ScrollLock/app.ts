@@ -1,18 +1,16 @@
 ﻿class Greeter {
-	private readonly line: ISegment;
+	private readonly display1: SevenSegment;
 	timerToken: number;
 
 	constructor(element: HTMLElement) {
-		this.line = new HLine(element, 200);
+		this.display1 = new SevenSegment(element);
+
 	}
 
 	start() {
 		this.timerToken = setInterval(() => {
-			if (this.line.isActive) {
-				this.line.setInactive();
-			} else {
-				this.line.setActive();
-			}
+			var s = new Date().getSeconds() % 10;
+			this.display1.setNumber(s);
 		}, 1000);
 	}
 

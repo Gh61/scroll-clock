@@ -1,2 +1,57 @@
-﻿body {
+﻿// is needed to change accordingly to Dimensions.ts
+@cornerWidth: 20px;
+@cornerHeight: 20px;
+@scrollbarHeight: 17px;
+
+body {
+}
+
+.horizontal-line div{
+	transition:width .5s;
+}
+.vertical-line div{
+	transition: height .5s;
+}
+
+.display {
+	position: relative;
+
+	.line {
+		position: absolute;
+	}
+
+	.segment-a {
+		top: 0;
+		left: @cornerWidth;
+	}
+
+	.segment-b {
+		right: 0;
+		top: @cornerHeight;
+	}
+
+	.segment-c {
+		right: 0;
+		bottom: @cornerHeight;
+	}
+
+	.segment-d {
+		bottom: 0;
+		right: @cornerWidth;
+	}
+
+	.segment-e {
+		left: 0;
+		bottom: @cornerHeight;
+	}
+
+	.segment-f {
+		left: 0;
+		top: @cornerHeight;
+	}
+
+	.segment-g {
+		left: @cornerWidth;
+		top: calc(50% ~"-" (@scrollbarHeight/2));
+	}
 }

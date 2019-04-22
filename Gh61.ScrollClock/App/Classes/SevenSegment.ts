@@ -60,8 +60,6 @@
 			throw `Value ${value} is out of supported range (0-9).`;
 		}
 
-		console.log(`Setting ${value}`);
-
 		switch (value) {
 			case 0:
 				this.get("a").setActive();

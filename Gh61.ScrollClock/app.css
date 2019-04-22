@@ -1,4 +1,7 @@
-﻿.horizontal-line div {
+﻿body {
+  text-align: center;
+}
+.horizontal-line div {
   transition: width 0.5s;
 }
 .vertical-line div {

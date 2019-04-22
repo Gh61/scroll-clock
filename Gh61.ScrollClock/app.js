@@ -1,3 +1,38 @@
+var DoubleDisplay = /** @class */ (function () {
+    function DoubleDisplay(container, padWithZero, segmentWidth, segmentHeight) {
+        if (segmentWidth === void 0) { segmentWidth = 100; }
+        if (segmentHeight === void 0) { segmentHeight = 200; }
+        this.element = document.createElement("div");
+        this.element.className = "double-display";
+        container.appendChild(this.element);
+        this.padWithZero = padWithZero;
+        this.display0 = new SevenSegment(this.element, segmentWidth, segmentHeight);
+        this.display1 = new SevenSegment(this.element, segmentWidth, segmentHeight);
+        // inline with space
+        this.display0.element.style.display = "inline-block";
+        this.display0.element.style.marginRight = "5px";
+        this.display1.element.style.display = "inline-block";
+    }
+    DoubleDisplay.prototype.deactivate = function () {
+        this.display0.deactivate();
+        this.display1.deactivate();
+    };
+    DoubleDisplay.prototype.setNumber = function (value) {
+        if (value < 0 || value > 99) {
+            throw "Value " + value + " is out of supported range (0-9).";
+        }
+        var d1 = value % 10;
+        var d0 = Math.floor(value / 10);
+        if (d0 === 0 && !this.padWithZero) {
+            this.display0.deactivate();
+        }
+        else {
+            this.display0.setNumber(d0);
+        }
+        this.display1.setNumber(d1);
+    };
+    return DoubleDisplay;
+}());
 var HLine = /** @class */ (function () {
     function HLine(parent, width) {
         this.parent = parent;
@@ -18,48 +53,6 @@ var HLine = /** @class */ (function () {
         this.isActive = false;
     };
     return HLine;
-}());
-var Greeter = /** @class */ (function () {
-    function Greeter(element) {
-        this.display1 = new DoubleDisplay(element, true);
-    }
-    Greeter.prototype.start = function () {
-        var _this = this;
-        this.timerToken = setInterval(function () {
-            var s = new Date().getSeconds();
-            _this.display1.setNumber(s);
-        }, 1000);
-    };
-    Greeter.prototype.stop = function () {
-        clearTimeout(this.timerToken);
-    };
-    return Greeter;
-}());
-window.onload = function () {
-    var el = document.getElementById("content");
-    var greeter = new Greeter(el);
-    greeter.start();
-};
-var VLine = /** @class */ (function () {
-    function VLine(parent, height) {
-        this.parent = parent;
-        this.height = height;
-        this.parent.style.height = height + "px";
-        this.parent.style.overflowY = "auto";
-        this.element = document.createElement("div");
-        this.element.style.width = "1px";
-        this.parent.appendChild(this.element);
-        this.setInactive();
-    }
-    VLine.prototype.setActive = function () {
-        this.element.style.height = "200%";
-        this.isActive = true;
-    };
-    VLine.prototype.setInactive = function () {
-        this.element.style.height = "100%";
-        this.isActive = false;
-    };
-    return VLine;
 }());
 var SevenSegment = /** @class */ (function () {
     function SevenSegment(container, width, height) {
@@ -108,7 +101,6 @@ var SevenSegment = /** @class */ (function () {
         if (value < 0 || value > 9) {
             throw "Value " + value + " is out of supported range (0-9).";
         }
-        console.log("Setting " + value);
         switch (value) {
             case 0:
                 this.get("a").setActive();
@@ -214,6 +206,27 @@ var SevenSegment = /** @class */ (function () {
     };
     return SevenSegment;
 }());
+var VLine = /** @class */ (function () {
+    function VLine(parent, height) {
+        this.parent = parent;
+        this.height = height;
+        this.parent.style.height = height + "px";
+        this.parent.style.overflowY = "auto";
+        this.element = document.createElement("div");
+        this.element.style.width = "1px";
+        this.parent.appendChild(this.element);
+        this.setInactive();
+    }
+    VLine.prototype.setActive = function () {
+        this.element.style.height = "200%";
+        this.isActive = true;
+    };
+    VLine.prototype.setInactive = function () {
+        this.element.style.height = "100%";
+        this.isActive = false;
+    };
+    return VLine;
+}());
 var Dimensions = /** @class */ (function () {
     function Dimensions() {
     }
@@ -222,39 +235,50 @@ var Dimensions = /** @class */ (function () {
     Dimensions.cornerHeight = 20;
     return Dimensions;
 }());
-var DoubleDisplay = /** @class */ (function () {
-    function DoubleDisplay(container, padWithZero, segmentWidth, segmentHeight) {
+var Greeter = /** @class */ (function () {
+    function Greeter(element) {
+        this.clock = new Clock(element);
+    }
+    Greeter.prototype.start = function () {
+        var _this = this;
+        this.timerToken = setInterval(function () {
+            _this.clock.setClock(new Date());
+        }, 1000);
+    };
+    Greeter.prototype.stop = function () {
+        clearTimeout(this.timerToken);
+    };
+    return Greeter;
+}());
+window.onload = function () {
+    var el = document.getElementById("content");
+    var greeter = new Greeter(el);
+    greeter.start();
+};
+var Clock = /** @class */ (function () {
+    function Clock(container, segmentWidth, segmentHeight) {
         if (segmentWidth === void 0) { segmentWidth = 100; }
         if (segmentHeight === void 0) { segmentHeight = 200; }
-        this.element = document.createElement("div");
-        this.element.className = "double-display";
-        container.appendChild(this.element);
-        this.padWithZero = padWithZero;
-        this.display0 = new SevenSegment(this.element, segmentWidth, segmentHeight);
-        this.display1 = new SevenSegment(this.element, segmentWidth, segmentHeight);
-        // inline with space
-        this.display0.element.style.display = "inline-block";
-        this.display0.element.style.marginRight = "5px";
-        this.display1.element.style.display = "inline-block";
+        var clockElement = document.createElement("div");
+        clockElement.className = "clock";
+        container.appendChild(clockElement);
+        this.hoursDisplay = new DoubleDisplay(clockElement, false, segmentWidth, segmentHeight);
+        this.minutesDisplay = new DoubleDisplay(clockElement, true, segmentWidth, segmentHeight);
+        this.secondsDisplay = new DoubleDisplay(clockElement, true, segmentWidth, segmentHeight);
+        this.hoursDisplay.element.style.display = "inline-block";
+        this.minutesDisplay.element.style.display = "inline-block";
+        this.secondsDisplay.element.style.display = "inline-block";
+        this.hoursDisplay.element.style.marginRight = Math.floor(segmentWidth / 3) + "px";
+        this.minutesDisplay.element.style.marginRight = Math.floor(segmentWidth / 3) + "px";
     }
-    DoubleDisplay.prototype.deactivate = function () {
-        this.display0.deactivate();
-        this.display1.deactivate();
+    Clock.prototype.setClock = function (clock) {
+        var hours = clock.getHours();
+        var minutes = clock.getMinutes();
+        var seconds = clock.getSeconds();
+        this.secondsDisplay.setNumber(seconds);
+        this.minutesDisplay.setNumber(minutes);
+        this.hoursDisplay.setNumber(hours);
     };
-    DoubleDisplay.prototype.setNumber = function (value) {
-        if (value < 0 || value > 99) {
-            throw "Value " + value + " is out of supported range (0-9).";
-        }
-        var d1 = value % 10;
-        var d0 = Math.floor(value / 10);
-        if (d0 === 0 && !this.padWithZero) {
-            this.display0.deactivate();
-        }
-        else {
-            this.display0.setNumber(d0);
-        }
-        this.display1.setNumber(d1);
-    };
-    return DoubleDisplay;
+    return Clock;
 }());
 //# sourceMappingURL=app.js.map

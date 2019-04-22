@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="App\Classes\Clock.ts" />
     <TypeScriptCompile Include="App\Classes\DoubleDisplay.ts" />
     <TypeScriptCompile Include="App\Classes\HLine.ts" />
     <TypeScriptCompile Include="App\Classes\SevenSegment.ts" />

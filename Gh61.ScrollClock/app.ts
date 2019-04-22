@@ -1,16 +1,14 @@
 ﻿class Greeter {
-	private readonly display1: IDisplay;
+	private readonly clock: Clock;
 	timerToken: number;
 
 	constructor(element: HTMLElement) {
-		this.display1 = new DoubleDisplay(element, true);
-
+		this.clock = new Clock(element);
 	}
 
 	start() {
 		this.timerToken = setInterval(() => {
-			var s = new Date().getSeconds();
-			this.display1.setNumber(s);
+			this.clock.setClock(new Date());
 		}, 1000);
 	}
 
